@@ -64,8 +64,8 @@ export const setConfig = newConfig => {
 }
 
 export const setCode = (code, {
-    limit,
     fn,
+    limit,
 }) => {
     const { limits } = _config
 
