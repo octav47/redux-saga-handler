@@ -33,6 +33,9 @@ const handler = handle(function* () {
     }
 
     yield put({ type: FETCH_TEST_SUCCESS, payload: true })
+}, {
+    useGlobalLimitAction: true,
+    failed: ({ type: 'FETCH_TEST_LIMIT_FAILED', payload: 'error' })
 })
 
 function* fn2 (action) {

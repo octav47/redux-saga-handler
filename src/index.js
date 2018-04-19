@@ -9,7 +9,7 @@ let _config = {
     }),
 }
 
-export function handle (fn) {
+export function handle (fn, options) {
     let errorCounter = 0
 
     return function* (action) {
@@ -24,7 +24,26 @@ export function handle (fn) {
             errorCounter++
 
             if (errorCounter >= limits[field]) {
-                yield put(_config.limitAction())
+                const {
+                    useGlobalLimitAction,
+                } = options
+
+                let {
+                    failed,
+                } = options
+
+                if (failed) {
+                    if (typeof failed === 'function') {
+                        failed = failed(e)
+                    }
+
+                    yield put(failed)
+                }
+
+                if (useGlobalLimitAction) {
+                    yield put(_config.limitAction())
+                }
+
                 errorCounter = 0
             } else {
                 if (_config[field]) {

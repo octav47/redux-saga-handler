@@ -1517,11 +1517,11 @@ var _config = {
     }
 };
 
-function handle(fn) {
+function handle(fn, options) {
     var errorCounter = 0;
 
     return (/*#__PURE__*/_regenerator2.default.mark(function _callee(action) {
-            var _config2, watchField, limits, field;
+            var _config2, watchField, limits, field, useGlobalLimitAction, failed;
 
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
@@ -1534,7 +1534,7 @@ function handle(fn) {
                         case 3:
 
                             errorCounter = 0;
-                            _context.next = 24;
+                            _context.next = 31;
                             break;
 
                         case 6:
@@ -1547,36 +1547,58 @@ function handle(fn) {
                             errorCounter++;
 
                             if (!(errorCounter >= limits[field])) {
-                                _context.next = 17;
+                                _context.next = 24;
                                 break;
                             }
 
-                            _context.next = 14;
+                            useGlobalLimitAction = options.useGlobalLimitAction;
+                            failed = options.failed;
+
+                            if (!failed) {
+                                _context.next = 18;
+                                break;
+                            }
+
+                            if (typeof failed === 'function') {
+                                failed = failed(_context.t0);
+                            }
+
+                            _context.next = 18;
+                            return (0, _effects.put)(failed);
+
+                        case 18:
+                            if (!useGlobalLimitAction) {
+                                _context.next = 21;
+                                break;
+                            }
+
+                            _context.next = 21;
                             return (0, _effects.put)(_config.limitAction());
 
-                        case 14:
+                        case 21:
+
                             errorCounter = 0;
-                            _context.next = 24;
+                            _context.next = 31;
                             break;
 
-                        case 17:
+                        case 24:
                             if (!_config[field]) {
-                                _context.next = 22;
+                                _context.next = 29;
                                 break;
                             }
 
-                            _context.next = 20;
+                            _context.next = 27;
                             return _config[field](action);
 
-                        case 20:
-                            _context.next = 24;
+                        case 27:
+                            _context.next = 31;
                             break;
 
-                        case 22:
-                            _context.next = 24;
+                        case 29:
+                            _context.next = 31;
                             return (0, _effects.put)({ type: '@@redux-saga-handler/UNKNOWN_ERROR' });
 
-                        case 24:
+                        case 31:
                         case 'end':
                             return _context.stop();
                     }
