@@ -1483,23 +1483,25 @@ var buffers = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.setConfig = undefined;
+exports.setCode = exports.setConfig = undefined;
+
+var _defineProperty2 = __webpack_require__(59);
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
 var _regenerator = __webpack_require__(19);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = __webpack_require__(35);
+var _extends4 = __webpack_require__(35);
 
-var _extends3 = _interopRequireDefault(_extends2);
+var _extends5 = _interopRequireDefault(_extends4);
 
 exports.handle = handle;
 
 var _effects = __webpack_require__(53);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _marked = /*#__PURE__*/_regenerator2.default.mark(handle);
 
 var _config = {
     watchField: 'error',
@@ -1509,86 +1511,95 @@ var _config = {
             args[_key] = arguments[_key];
         }
 
-        return (0, _extends3.default)({
+        return (0, _extends5.default)({
             type: '@@redux-saga-handler/LIMIT'
         }, args);
     }
 };
 
-var handleErrorCounter = {};
+function handle(fn) {
+    var errorCounter = 0;
 
-function handle(action, fn) {
-    var _config2, watchField, limits, field;
+    return (/*#__PURE__*/_regenerator2.default.mark(function _callee(action) {
+            var _config2, watchField, limits, field;
 
-    return _regenerator2.default.wrap(function handle$(_context) {
-        while (1) {
-            switch (_context.prev = _context.next) {
-                case 0:
-                    _context.prev = 0;
-                    _context.next = 3;
-                    return fn(action);
+            return _regenerator2.default.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            _context.prev = 0;
+                            _context.next = 3;
+                            return fn(action);
 
-                case 3:
+                        case 3:
 
-                    console.log('here!');
-                    _context.next = 26;
-                    break;
+                            errorCounter = 0;
+                            _context.next = 24;
+                            break;
 
-                case 6:
-                    _context.prev = 6;
-                    _context.t0 = _context['catch'](0);
-                    _config2 = _config, watchField = _config2.watchField, limits = _config2.limits;
-                    field = _context.t0[watchField];
+                        case 6:
+                            _context.prev = 6;
+                            _context.t0 = _context['catch'](0);
+                            _config2 = _config, watchField = _config2.watchField, limits = _config2.limits;
+                            field = _context.t0[watchField];
 
 
-                    if (!handleErrorCounter[field]) {
-                        handleErrorCounter[field] = 0;
+                            errorCounter++;
+
+                            if (!(errorCounter >= limits[field])) {
+                                _context.next = 17;
+                                break;
+                            }
+
+                            _context.next = 14;
+                            return (0, _effects.put)(_config.limitAction());
+
+                        case 14:
+                            errorCounter = 0;
+                            _context.next = 24;
+                            break;
+
+                        case 17:
+                            if (!_config[field]) {
+                                _context.next = 22;
+                                break;
+                            }
+
+                            _context.next = 20;
+                            return _config[field](action);
+
+                        case 20:
+                            _context.next = 24;
+                            break;
+
+                        case 22:
+                            _context.next = 24;
+                            return (0, _effects.put)({ type: '@@redux-saga-handler/UNKNOWN_ERROR' });
+
+                        case 24:
+                        case 'end':
+                            return _context.stop();
                     }
-
-                    handleErrorCounter[field]++;
-
-                    console.log(handleErrorCounter);
-
-                    if (!(handleErrorCounter[field] > 5)) {
-                        _context.next = 19;
-                        break;
-                    }
-
-                    _context.next = 16;
-                    return (0, _effects.put)(_config.limitAction());
-
-                case 16:
-                    handleErrorCounter[field] = 0;
-                    _context.next = 26;
-                    break;
-
-                case 19:
-                    if (!_config[field]) {
-                        _context.next = 24;
-                        break;
-                    }
-
-                    _context.next = 22;
-                    return _config[field](action);
-
-                case 22:
-                    _context.next = 26;
-                    break;
-
-                case 24:
-                    _context.next = 26;
-                    return (0, _effects.put)({ type: '@@redux-saga-handler/UNKNOWN_ERROR' });
-
-                case 26:
-                case 'end':
-                    return _context.stop();
-            }
-        }
-    }, _marked, this, [[0, 6]]);
+                }
+            }, _callee, this, [[0, 6]]);
+        })
+    );
 }
 
 var setConfig = exports.setConfig = function setConfig(newConfig) {
-    _config = (0, _extends3.default)({}, _config, newConfig);
+    _config = (0, _extends5.default)({}, _config, newConfig);
+};
+
+var setCode = exports.setCode = function setCode(code, _ref) {
+    var _extends3;
+
+    var limit = _ref.limit,
+        fn = _ref.fn;
+    var _config3 = _config,
+        limits = _config3.limits;
+
+
+    _config = (0, _extends5.default)({}, _config, (_extends3 = {}, (0, _defineProperty3.default)(_extends3, code, fn), (0, _defineProperty3.default)(_extends3, 'limits', (0, _extends5.default)({}, limits, (0, _defineProperty3.default)({}, code, limit))), _extends3));
 };
 
 /***/ }),
@@ -2375,9 +2386,32 @@ if (hadRuntime) {
 /***/ }),
 /* 22 */,
 /* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(25), __esModule: true };
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(26);
+var $Object = __webpack_require__(4).Object;
+module.exports = function defineProperty(it, key, desc) {
+  return $Object.defineProperty(it, key, desc);
+};
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(9);
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !__webpack_require__(1), 'Object', { defineProperty: __webpack_require__(10).f });
+
+
+/***/ }),
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3030,6 +3064,36 @@ function throttle(delayLength, pattern, worker) {
     }
   }, 'q1', 'throttle(' + Object(__WEBPACK_IMPORTED_MODULE_0__fsmIterator__["c" /* safeName */])(pattern) + ', ' + worker.name + ')');
 }
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _defineProperty = __webpack_require__(24);
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (obj, key, value) {
+  if (key in obj) {
+    (0, _defineProperty2.default)(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
 
 /***/ })
 /******/ ]);
