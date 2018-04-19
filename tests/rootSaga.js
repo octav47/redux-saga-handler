@@ -1,8 +1,8 @@
 import { fork, all } from 'redux-saga/effects'
-import randomUserSaga from './randomUserSaga'
+import testSaga from './testSaga'
 
 export default function* rootSaga () {
     yield all([
-        fork(randomUserSaga),
+        fork(testSaga),
     ])
 }

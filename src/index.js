@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import { put } from 'redux-saga/effects'
 
 class ReduxSagaHandler {
@@ -26,21 +27,5 @@ export const setConfig = newConfig => {
     _config = {
         ..._config,
         ...newConfig,
-    }
-}
-
-export const createSagaHandler = config => {
-
-}
-
-export const middleware = store => {
-    return next => {
-        return action => {
-            if (action['@@redux-saga/SAGA_ACTION']) {
-                _config.handle(store, next, action)
-            }
-
-            next(action)
-        }
     }
 }

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.middleware = exports.createSagaHandler = exports.setConfig = undefined;
+exports.setConfig = undefined;
 
 var _extends2 = require('babel-runtime/helpers/extends');
 
@@ -77,18 +77,4 @@ function handle(action, fn) {
 
 var setConfig = exports.setConfig = function setConfig(newConfig) {
     _config = (0, _extends3.default)({}, _config, newConfig);
-};
-
-var createSagaHandler = exports.createSagaHandler = function createSagaHandler(config) {};
-
-var middleware = exports.middleware = function middleware(store) {
-    return function (next) {
-        return function (action) {
-            if (action['@@redux-saga/SAGA_ACTION']) {
-                _config.handle(store, next, action);
-            }
-
-            next(action);
-        };
-    };
 };
