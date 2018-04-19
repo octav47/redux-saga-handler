@@ -5,10 +5,10 @@ module.exports = {
     resolve: {
         extensions: ['*', '.js', '.jsx', '.json'],
     },
-    entry: ['babel-polyfill', './tests/main.js'],
+    entry: './tests/main.js',
     output: {
         path: path.resolve(__dirname, 'tests'),
-        filename: 'tests.bundle.js',
+        filename: 'bundle.js',
     },
     module: {
         rules: [

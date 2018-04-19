@@ -1,4 +1,5 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { put, takeLatest } from 'redux-saga/effects'
+import { setConfig, handle } from '../dist/reduxSagaHandler'
 
 import {
     FETCH_TEST_REQUEST,
@@ -6,27 +7,34 @@ import {
     FETCH_TEST_FAILED,
 } from './const'
 
-function* fn() {
-    try {
+setConfig({
+    watchField: 'code',
+    403: function* (action) {
+        yield new Promise(resolve => setTimeout(resolve, 1000))
+        yield put({ type: FETCH_TEST_FAILED })
+        yield put(action)
+    },
+})
+
+function* fn2 (action) {
+    yield handle(action, function* () {
         const random = Math.random()
 
         console.log('random', random)
 
-        if (random < 0.5) {
+        if (random < 0.75) {
             throw {
-                code: 401,
-                message: 'random was less then 0.25',
+                code: 403,
+                message: 'random was less then 0.75',
             }
         }
 
         yield put({ type: FETCH_TEST_SUCCESS, payload: true })
-    } catch (e) {
-        yield put({ type: FETCH_TEST_FAILED, error: true, payload: e })
-    }
+    })
 }
 
-function* mySaga() {
-    yield takeLatest(FETCH_TEST_REQUEST, fn)
+function* mySaga () {
+    yield takeLatest(FETCH_TEST_REQUEST, fn2)
 }
 
 export default mySaga
